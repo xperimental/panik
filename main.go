@@ -20,6 +20,7 @@ func main() {
 	r := mux.NewRouter()
 	r.Methods(http.MethodGet).Path("/panic/{name}").Handler(panicHandler(panicTexts))
 	r.Methods(http.MethodGet).Path("/panics").Handler(listPanicsHandler(panicTexts))
+	r.Methods(http.MethodPost).Path("/print").Handler(printHandler())
 	r.Path("/_healthz").Handler(healthHandler())
 	r.Path("/").Handler(indexHandler(Version))
 
