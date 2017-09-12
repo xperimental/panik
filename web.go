@@ -120,6 +120,6 @@ func printHandler() http.Handler {
 			return
 		}
 
-		fmt.Fprintf(w, "%d bytes written.", written)
+		fmt.Fprintf(w, "%d bytes written.\n", written)
 	})
 }
