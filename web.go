@@ -73,7 +73,7 @@ func getOutput(r *http.Request, defaultOut io.Writer) (io.Writer, error) {
 	}
 
 	if len(outputs) == 0 {
-		return nil, errors.New("no output specified!")
+		return nil, errors.New("no output specified")
 	}
 
 	output := strings.ToLower(outputs[0])
