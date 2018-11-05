@@ -1,10 +1,11 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 )
 
@@ -12,6 +13,25 @@ var addr = ":8080"
 
 // Version contains the version string when built using Docker.
 var Version = ""
+
+var log = (&logrus.Logger{
+	Out: os.Stderr,
+	Formatter: &logrus.JSONFormatter{
+		DisableTimestamp: true,
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyLevel: "severity",
+		},
+	},
+	Level: logrus.InfoLevel,
+}).WithFields(logrus.Fields{
+	"serviceContext": struct {
+		Service string `json:"service"`
+		Version string `json:"version"`
+	}{
+		Service: "/dust/panik",
+		Version: Version,
+	},
+})
 
 func main() {
 	pflag.StringVarP(&addr, "addr", "a", addr, "Address to listen on.")
@@ -24,6 +44,6 @@ func main() {
 	r.Path("/_healthz").Handler(healthHandler())
 	r.Path("/").Handler(indexHandler(Version))
 
-	log.Printf("Listening on %s", addr)
+	log.Infof("Listening on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, r))
 }
