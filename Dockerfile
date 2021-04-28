@@ -1,6 +1,4 @@
-FROM golang:1 AS builder
-
-RUN apt-get update && apt-get install -y upx
+FROM golang:1.16 AS builder
 
 WORKDIR /build
 
@@ -17,9 +15,7 @@ RUN export VERSION="$(git describe --tags --always)" \
  && echo "-- TEST" \
  && go test ./... \
  && echo "-- BUILD" \
- && go install -tags netgo -ldflags "${LD_FLAGS}" . \
- && echo "-- PACK" \
- && upx -9 /go/bin/panik
+ && go install -tags netgo -ldflags "${LD_FLAGS}" .
 
 FROM busybox
 LABEL maintainer="Robert Jacob <xperimental@solidproject.de>"
